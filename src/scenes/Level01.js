@@ -39,8 +39,9 @@ class Level01 extends Phaser.Scene {
             this.platforms.add(groundTile);
         }
         
-        this.player = this.physics.add.sprite(centerX, centerY, "platformer_atlas", "front").setScale(0.5);
+        this.player = this.physics.add.sprite(centerX, centerY, "player").setScale(0.3);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
+        this.player.body.setSize(150, 171);
 
         // set up collider for player and ground
         this.physics.add.collider(this.player, this.platforms);
@@ -61,8 +62,10 @@ class Level01 extends Phaser.Scene {
         if(!this.playerDead) {
             if(keyA.isDown) {
                 this.player.body.setAccelerationX(-acceleration);
+                this.player.setFlip(true, false);
             } else if(keyD.isDown) {
                 this.player.body.setAccelerationX(acceleration);
+                this.player.resetFlip();
             } else {
                 this.player.body.setAccelerationX(0);
                 this.player.body.setDragX(2500);
