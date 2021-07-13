@@ -6,12 +6,15 @@ class Level01 extends Phaser.Scene {
     preload() {
         this.load.atlas("platformer_atlas", "./assets/kenny_sheet.png", "./assets/kenny_sheet.json");
         this.load.image("obstacle", "./assets/test-obstacle.png");
+        this.load.image("player", "./assets/Player.png");
+        this.load.image("terrain", "./assets/block.png");
     }
 
     create() {
         this.playerDead = false;
         // set gravity setting
         this.physics.world.gravity.y = 3000;
+        this.obstacleTrigger = false;
 
         // create keybinds
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -24,13 +27,13 @@ class Level01 extends Phaser.Scene {
         // create platform group
         this.platforms = this.add.group();
         for(let i = 0; i < game.config.width; i += tileSize) {
-            let groundTile = this.physics.add.sprite(i, game.config.height - tileSize, 'platformer_atlas', 'block').setScale(0.5).setOrigin(0);
+            let groundTile = this.physics.add.sprite(i, game.config.height - tileSize, "terrain").setScale(0.55).setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
             this.platforms.add(groundTile);
         }
         for(let i = tileSize*2; i < game.config.width-tileSize*13; i += tileSize) {
-            let groundTile = this.physics.add.sprite(i, game.config.height - tileSize*9, 'platformer_atlas', 'block').setScale(0.5).setOrigin(0);
+            let groundTile = this.physics.add.sprite(i, game.config.height - tileSize*9, "terrain").setScale(0.55).setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
             this.platforms.add(groundTile);
@@ -73,6 +76,10 @@ class Level01 extends Phaser.Scene {
 
         // trigger the obstacle to drop on the player
         if(this.player.x >= centerX + 32) {
+            this.obstacleTrigger = true;
+        }
+        // once obstacle is triggered, move it through screen
+        if(this.obstacleTrigger) {
             this.obstacle.body.y += 10;
         }
 
