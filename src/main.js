@@ -14,7 +14,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            //debug: true,
+            debug: true,
             gravity: {
                 x: 0,
                 y: 0
@@ -39,5 +39,5 @@ let jumpVelocity = -1000;
 let centerX = game.config.width / 2;
 let centerY = game.config.height / 2;
 //del later
-const tileSize = 35;
+const tileSize = 32;
 
