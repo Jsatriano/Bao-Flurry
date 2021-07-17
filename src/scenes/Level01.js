@@ -18,6 +18,9 @@ class Level01 extends Phaser.Scene {
         this.playerDead = false;
         this.playerWin = false;
 
+        // set bounds of world so player can't walk off
+        this.physics.world.setBounds(0, 0, 2560, 720 , true, false, true, true);
+
         // add victory text and hide it
         this.vicText = this.add.tileSprite(1280, 0, 1280, 720, "vicText").setOrigin(0, 0);
         this.vicText.alpha = 0;
@@ -43,6 +46,7 @@ class Level01 extends Phaser.Scene {
         
         // create the player
         this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.3);
+        this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
         this.player.body.setSize(130, 171);
         
@@ -162,7 +166,7 @@ class Level01 extends Phaser.Scene {
         }
         // once obstacle is triggered, move it through screen
         if(this.obstacleTrigger) {
-            this.obstacle.body.y += 12;
+            this.obstacle.body.y += 15;
         }
 
         // if player collides with bad stuff, do whatever playerCollision function does
