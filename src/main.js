@@ -1,8 +1,4 @@
 // TO DO 
-// create ObstacleFake / ObstacleReal classes (can look like spikes or flames)
-// ObstacleFake - player can walk through it and wont die
-// ObstacleReal - player will die if they walk through it
-// collision events with the player and obstacles
 // create an enemy class that patrols an area
 let config = {
     type: Phaser.CANVAS,
@@ -14,7 +10,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true,
+            //debug: true,
             gravity: {
                 x: 0,
                 y: 0
@@ -38,6 +34,5 @@ let max_y_vel = 5000;
 let jumpVelocity = -1000;
 let centerX = game.config.width / 2;
 let centerY = game.config.height / 2;
-//del later
 const tileSize = 32;
 
