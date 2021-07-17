@@ -185,7 +185,7 @@ class Level01 extends Phaser.Scene {
 
     levelWin() {
         this.music.stop();
-        this.sound.play("sfx_victory");
+        this.sound.play("sfx_victory", {volume: 0.2});
         this.playerDead = true;
         this.playerWin = true;
         let sparks = this.add.particles('spark');    
