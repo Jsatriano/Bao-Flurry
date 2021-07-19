@@ -32,7 +32,6 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
-        this.scene.start("level02");
         if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.sound.play("sfx_select");
             this.scene.start("level01");
