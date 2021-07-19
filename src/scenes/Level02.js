@@ -50,7 +50,7 @@ class level02 extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // create the player
-        this.player = this.physics.add.sprite(tileSize * 65, game.config.height - (tileSize * 25), "player").setScale(0.3);
+        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.3);
         this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
         this.player.body.setSize(130, 171);
