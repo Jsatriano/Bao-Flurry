@@ -10,14 +10,14 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            //debug: true,
+            debug: true,
             gravity: {
                 x: 0,
                 y: 0
             }
         }
     },
-    scene: [Menu, Level01, GameOver]
+    scene: [Menu, Level01, GameOver, level02]
 }
 
 // set game up

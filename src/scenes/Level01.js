@@ -19,15 +19,16 @@ class Level01 extends Phaser.Scene {
         this.playerWin = false;
 
         // set bounds of world so player can't walk off
-        this.physics.world.setBounds(0, 0, 2560, 720 , true, false, true, true);
+        this.physics.world.setBounds(0, 0, game.config.width * 2, game.config.height , true, false, true, true);
 
         // add victory text and hide it
         this.vicText = this.add.tileSprite(1280, 0, 1280, 720, "vicText").setOrigin(0, 0);
         this.vicText.alpha = 0;
         this.vicText.depth = 3;
         
-        // set gravity setting
+        // set gravity
         this.physics.world.gravity.y = 3000;
+
         this.obstacleTrigger = false;
 
         // create and play background music
@@ -52,15 +53,16 @@ class Level01 extends Phaser.Scene {
         
         // change background color
         this.cameras.main.setBackgroundColor("#227B96");
+
         // set up other camera options
-        this.cameras.main.setBounds(0, 0, 2560, game.config.height);
+        this.cameras.main.setBounds(0, 0, game.config.width * 2, game.config.height);
         this.cameras.main.startFollow(this.player);
 
         // create platform group
         this.platforms = this.add.group();
         
         // ------- START OF LEVEL TERRAIN CREATION  -------
-        this.createTerrainHorizontal(0, 2560, game.config.height - tileSize); // base terrain
+        this.createTerrainHorizontal(0, game.config.width * 2, game.config.height - tileSize); // base terrain
 
         this.createTerrainHorizontal(tileSize * 12, tileSize * 34, game.config.height  - (tileSize * 2)); //
         this.createTerrainHorizontal(tileSize * 22, tileSize * 34, game.config.height  - (tileSize * 3)); //
@@ -77,7 +79,7 @@ class Level01 extends Phaser.Scene {
         // set up collider for player and ground
         this.physics.add.collider(this.player, this.platforms);
 
-        // create obstacle
+        // create drop down obstacle
         this.obstacle = new ObstacleDrop(this, tileSize * 35, -64).setScale(2).setOrigin(0);
         this.obstacle.body.setAllowGravity(false);
         this.obstacle.depth = -1;
@@ -152,7 +154,7 @@ class Level01 extends Phaser.Scene {
         if(this.playerWin) {
             if(Phaser.Input.Keyboard.JustDown(keyR)) {
                 this.sound.play("sfx_select");
-                //this.scene.start("level02");
+                this.scene.start("level02");
             }
             if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.sound.play("sfx_select");
@@ -185,7 +187,7 @@ class Level01 extends Phaser.Scene {
 
     levelWin() {
         this.music.stop();
-        this.sound.play("sfx_victory");
+        this.sound.play("sfx_victory", {volume: 0.2});
         this.playerDead = true;
         this.playerWin = true;
         let sparks = this.add.particles('spark');    
