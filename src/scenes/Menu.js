@@ -7,6 +7,7 @@ class Menu extends Phaser.Scene {
         this.load.audio("sfx_select", "./assets/sfx/test-select.wav");
         this.load.audio("sfx_death", "./assets/sfx/test-death.wav");
         this.load.audio("sfx_music01", "./assets/sfx/backgroundmusic01.wav");
+        this.load.audio("sfx_music02", "./assets/sfx/backgroundmusic02.wav");
         this.load.audio("sfx_victory", "./assets/sfx/victory.wav");
     }
 
@@ -33,7 +34,7 @@ class Menu extends Phaser.Scene {
     update() {
         if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.sound.play("sfx_select");
-            this.scene.start("level01");
+            this.scene.start("level02");
         }
         
     }
