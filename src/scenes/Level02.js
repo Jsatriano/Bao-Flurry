@@ -26,7 +26,7 @@ class level02 extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, game.config.width * 2.5, game.config.height , true, false, true, true);
 
         // add victory text and hide it
-        this.vicText = this.add.tileSprite(1280, 0, 1280, 720, "vicText").setOrigin(0, 0);
+        this.vicText = this.add.tileSprite(game.config.width * 1.5, 0, 1280, 720, "vicText").setOrigin(0, 0);
         this.vicText.alpha = 0;
         this.vicText.depth = 3;
 
@@ -50,7 +50,7 @@ class level02 extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // create the player
-        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 25), "player").setScale(0.3);
+        this.player = this.physics.add.sprite(tileSize * 65, game.config.height - (tileSize * 25), "player").setScale(0.3);
         this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
         this.player.body.setSize(130, 171);
@@ -59,7 +59,7 @@ class level02 extends Phaser.Scene {
         this.cameras.main.setBackgroundColor("#227B96");
         
         // set up other camera options
-        this.cameras.main.setBounds(0, 0, 2560, game.config.height);
+        this.cameras.main.setBounds(0, 0, game.config.width * 2.5, game.config.height);
         this.cameras.main.startFollow(this.player);
 
         // create platform group
@@ -95,20 +95,33 @@ class level02 extends Phaser.Scene {
         this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 6), tileSize * 60);   //  series of walls inside cube
         this.createTerrainVertical(game.config.height - (tileSize * 16), game.config.height - (tileSize * 9), tileSize * 65);   //
 
+        this.createTerrainHorizontal(tileSize * 80, tileSize * 87, game.config.height - (tileSize * 16));                        // floating platrom with fake flag
+        this.createTerrainVertical(game.config.height - (tileSize * 23), game.config.height - (tileSize * 15), tileSize * 87);   // wall near fake flag
+        
         this.createTerrainHorizontal(tileSize * 70, tileSize * 77, game.config.height - (tileSize * 12));   //
         this.createTerrainHorizontal(tileSize * 60, tileSize * 71, game.config.height - (tileSize * 6));    //  series of platforms inside cube
         this.createTerrainHorizontal(tileSize * 58, tileSize * 60, game.config.height - (tileSize * 12));   //
-        this.createTerrainHorizontal(tileSize * 76, tileSize * 80, game.config.height - (tileSize * 16));
+        this.createTerrainHorizontal(tileSize * 76, tileSize * 80, game.config.height - (tileSize * 16));   //
+
+        this.createTerrainHorizontal(tileSize * 92, game.config.width * 2.5, game.config.height - (tileSize * 11));     // platform with real flag
+        this.createTerrainVertical(game.config.height - (tileSize * 11), game.config.height, tileSize * 92);            // wall near real flag
         
         this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 5), tileSize * 59);   //
         this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 5), tileSize * 71);   //
-        this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 5), tileSize * 72);   //  filler terrain
+        this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 5), tileSize * 72);   //  
         this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 5), tileSize * 73);   //
         this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 5), tileSize * 74);   //
         this.createTerrainVertical(game.config.height - (tileSize * 12), game.config.height - (tileSize * 5), tileSize * 75);   //
-        this.createTerrainVertical(game.config.height - (tileSize * 16), game.config.height - (tileSize * 7), tileSize * 77);
-        this.createTerrainVertical(game.config.height - (tileSize * 16), game.config.height - (tileSize * 7), tileSize * 78);
-        this.createTerrainVertical(game.config.height - (tileSize * 16), game.config.height - (tileSize * 7), tileSize * 79);
+        this.createTerrainVertical(game.config.height - (tileSize * 16), game.config.height - (tileSize * 7), tileSize * 77);   //
+        this.createTerrainVertical(game.config.height - (tileSize * 16), game.config.height - (tileSize * 7), tileSize * 78);   //
+        this.createTerrainVertical(game.config.height - (tileSize * 16), game.config.height - (tileSize * 7), tileSize * 79);   //  filler terrain
+        this.createTerrainVertical(game.config.height - (tileSize * 10), game.config.height, tileSize * 93);                    //
+        this.createTerrainVertical(game.config.height - (tileSize * 10), game.config.height, tileSize * 94);                    //
+        this.createTerrainVertical(game.config.height - (tileSize * 10), game.config.height, tileSize * 95);                    //
+        this.createTerrainVertical(game.config.height - (tileSize * 10), game.config.height, tileSize * 96);                    //
+        this.createTerrainVertical(game.config.height - (tileSize * 10), game.config.height, tileSize * 97);                    //
+        this.createTerrainVertical(game.config.height - (tileSize * 10), game.config.height, tileSize * 98);                    //
+        this.createTerrainVertical(game.config.height - (tileSize * 10), game.config.height, tileSize * 99);                    //
         // ------- END OF LEVEL TERRAIN CREATION -------
 
         // set up collider for player and ground
@@ -118,7 +131,10 @@ class level02 extends Phaser.Scene {
         this.bounceBlock = this.add.group();
         
         // create the bounce blocks
-        this.createBounceBlock(tileSize * 61, tileSize * 63, game.config.height - (tileSize * 6) - 1);
+        this.createBounceBlock(tileSize * 61, tileSize * 63, game.config.height - (tileSize * 6) - 1);  // bounce blocks inside cube
+
+        this.createBounceBlock(tileSize * 86, tileSize * 89, game.config.height - (tileSize * 1) - 1);  // bounce blocks before real flag
+
         
         // create fake and real spike groups
         this.popFakeGroup = this.add.group();
@@ -139,17 +155,51 @@ class level02 extends Phaser.Scene {
         this.createSpike(tileSize * 52, game.config.height - (tileSize * 2), true);     //
         this.createSpike(tileSize * 53, game.config.height - (tileSize * 2), true);     // 
 
+        this.createSpike(tileSize * 76, game.config.height - (tileSize * 17), true);    //  spikes leading to fake flag
+        this.createSpike(tileSize * 79, game.config.height - (tileSize * 17), true);    //
+
         this.createSpike(tileSize * 68, game.config.height - (tileSize * 7), true);     //   spikes inside cube
         this.createSpike(tileSize * 69, game.config.height - (tileSize * 7), true);     //
+        this.createSpike(tileSize * 63, game.config.height - (tileSize * 2), false);     //
+        this.createSpike(tileSize * 70, game.config.height - (tileSize * 2), false);     //
+        
         // ------- FINISHED CREATING SPIKES -------
 
         this.enemyGroup = this.add.group();
         // create enemies
         this.enemy01 = this.physics.add.sprite(tileSize * 16, game.config.height - (tileSize * 3), "enemy").setScale(0.3);
         this.enemyGroup.add(this.enemy01);
+        this.enemy02 = this.physics.add.sprite(tileSize * 56, game.config.height - (tileSize * 19), "enemy").setScale(0.45);
+        this.enemyGroup.add(this.enemy02);
+        this.enemy03= this.physics.add.sprite(tileSize * 57, game.config.height - (tileSize * 2), "enemy").setScale(0.23);
+        this.enemy03.body.setSize(130, 171);
+        this.enemyGroup.add(this.enemy03);
         // set up colliders for player and enemies
         this.physics.add.collider(this.player, this.platforms);
-        this.physics.add.collider(this.enemy01, this.platforms);
+        this.physics.add.collider(this.enemyGroup, this.platforms);
+
+        // create end of level flag
+        this.flag = new Flag(this, game.config.width * 2.5 - (tileSize * 2), game.config.height - (tileSize * 11)).setOrigin(1);
+        this.flag.body.setAllowGravity(false);
+        this.flag.body.setSize(24, 192);
+        this.flag.depth = 2;
+
+        // if player collides with the flag, do whatever levelWin funsion does
+        let flagCollider = this.physics.add.collider(this.player, this.flag, this.levelWin, function ()
+        {
+            this.physics.world.removeCollider(flagCollider);
+        }, this);
+
+        this.fakeFlag = new Flag(this, tileSize * 86, game.config.height - (tileSize * 16)).setOrigin(1);
+        this.fakeFlag.body.setAllowGravity(false);
+        this.fakeFlag.body.setSize(24, 192);
+        this.fakeFlag.depth = 2;
+
+        // create drop down obstacle
+        this.obstacle = new ObstacleDrop(this, tileSize * 81, -64).setScale(2).setOrigin(0);
+        this.obstacle.body.setAllowGravity(false);
+        this.obstacle.depth = -1;
+
     }
 
     update() {
@@ -182,11 +232,53 @@ class level02 extends Phaser.Scene {
             this.enemy01.body.setVelocityX(0);
             this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(-150); this.enemy01.setFlip(true, false); });
         }
+        // patrolling movement for enemy02
+        if(this.enemy02.x <= tileSize * 56) {
+            this.enemy02.body.setVelocityX(0);
+            this.time.delayedCall(500, () => { this.enemy02.body.setVelocityX(150); this.enemy02.resetFlip(); });
+        }
+
+        if(this.enemy02.x >= tileSize * 70) {
+            this.enemy02.body.setVelocityX(0);
+            this.time.delayedCall(1500, () => { this.enemy02.body.setVelocityX(-150); this.enemy02.setFlip(true, false); });
+        }
+        // patrolling movement for enemy03
+        if(this.enemy03.x <= tileSize * 57) {
+            this.enemy03.body.setVelocityX(0);
+            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(225); this.enemy03.resetFlip(); });
+        }
+
+        if(this.enemy03.x >= tileSize * 76) {
+            this.enemy03.body.setVelocityX(0);
+            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(-225); this.enemy03.setFlip(true, false); });
+        }
+
+        // trigger the obstacle to drop on the player
+        if(this.player.x >= tileSize * 78.5 && this.player.x <= tileSize * 79  && this.player.y <= game.config.height - (tileSize * 10)) {
+            this.obstacleTrigger = true;
+        }
+        // once obstacle is triggered, move it through screen
+        if(this.obstacleTrigger) {
+            this.obstacle.body.y += 10;
+        }
+
+        // if player has  reached the flag, new keybinds are available
+        if(this.playerWin) {
+            if(Phaser.Input.Keyboard.JustDown(keyR)) {
+                this.sound.play("sfx_select");
+                this.scene.start("level02");
+            }
+            if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
+                this.sound.play("sfx_select");
+                this.scene.start("menuScene");
+            }
+        }
 
         // add colliders
         this.physics.world.collide(this.player, this.bounceBlock, this.playerBounce, null, this);
         this.physics.world.collide(this.player, this.popRealGroup, this.playerCollision, null, this);
         this.physics.world.collide(this.player, this.enemyGroup, this.playerCollision, null, this);
+        this.physics.world.collide(this.player, this.obstacle, this.playerCollision, null, this);
     }
 
 

@@ -154,7 +154,7 @@ class Level01 extends Phaser.Scene {
         if(this.playerWin) {
             if(Phaser.Input.Keyboard.JustDown(keyR)) {
                 this.sound.play("sfx_select");
-                //this.scene.start("level02");
+                this.scene.start("level02");
             }
             if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.sound.play("sfx_select");
