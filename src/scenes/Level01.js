@@ -11,8 +11,10 @@ class Level01 extends Phaser.Scene {
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
         this.load.image("vicText", "./assets/victory text.png");
-        this.load.spritesheet("player_walk", "./assets/Player.png", {frameWidth: 771, frameHeight: 731, startFrame: 0, endFrame: 0});
-        this.load.spritesheet("player_idle", "./assets/Player_Idle.png", {frameWidth: 796, frameHeight: 771, startFrame: 0, endFrame: 4});
+        this.load.spritesheet("player_walk", "./assets/Animations/PlayerRunAnim.png", {frameWidth: 200, frameHeight: 189, startFrame: 0, endFrame: 8});
+        this.load.spritesheet("player_idle", "./assets/Animations/PlayerIdleAnim.png", {frameWidth: 191, frameHeight: 185, startFrame: 0, endFrame: 4});
+        this.load.spritesheet("player_jump", "./assets/Animations/PlayerJumpAnim.png", {frameWidth: 210, frameHeight: 185, startFrame: 0, endFrame: 1});
+        //this.load.spritesheet("player_land", "./assets/Animations/PlayerLandAnim.png", {frameWidth: 190, frameHeight: 185, startFrame: 0, endFrame: 2});
     }
 
     create() {
@@ -45,16 +47,28 @@ class Level01 extends Phaser.Scene {
         this.anims.create({
             key: 'player-idle',
             frames: this.anims.generateFrameNumbers('player_idle', { start: 0, end: 4, first: 0}),
-            frameRate: 8,
+            frameRate: 10,
             loop: true
         });
         // create walk animation for player
         this.anims.create({
             key: 'player-walk',
-            frames: this.anims.generateFrameNumbers('player_walk', { start: 0, end: 0, first: 0}),
-            frameRate: 8,
+            frames: this.anims.generateFrameNumbers('player_walk', { start: 0, end: 8, first: 0}),
+            frameRate: 15,
             loop: true
         });
+        // create jump animation for player
+        this.anims.create({
+            key: 'player-jump',
+            frames: this.anims.generateFrameNumbers('player_jump', { start: 0, end: 1, first: 0}),
+            frameRate: 15,
+        });
+         // create landing animation for player
+        //  this.anims.create({
+        //     key: 'player-land',
+        //     frames: this.anims.generateFrameNumbers('player_land', { start: 0, end: 2, first: 0}),
+        //     frameRate: 5,
+        // });
 
         // create keybinds
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -63,10 +77,10 @@ class Level01 extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         
         // create the player
-        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.085);
+        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.3);
         this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
-        this.player.body.setSize(450, 731);
+        this.player.body.setSize(140, 185);
         
         // change background color
         this.cameras.main.setBackgroundColor("#227B96");
@@ -165,6 +179,13 @@ class Level01 extends Phaser.Scene {
                 this.player.anims.play("player-idle", true);
             }
 
+            // play jump animation
+            if(!this.player.body.touching.down) {
+                this.player.anims.play("player-jump", true);
+                this.justJumped = true;
+                
+            }
+            
             // allow player to jump
             if(this.player.body.touching.down && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.player.body.setVelocityY(jumpVelocity);

@@ -13,8 +13,10 @@ class level02 extends Phaser.Scene {
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
         this.load.image("vicText", "./assets/victory text.png");
-        this.load.spritesheet("player_walk", "./assets/Player.png", {frameWidth: 771, frameHeight: 731, startFrame: 0, endFrame: 0});
-        this.load.spritesheet("player_idle", "./assets/Player_Idle.png", {frameWidth: 796, frameHeight: 771, startFrame: 0, endFrame: 4});
+        this.load.spritesheet("player_walk", "./assets/Animations/PlayerRunAnim.png", {frameWidth: 200, frameHeight: 189, startFrame: 0, endFrame: 8});
+        this.load.spritesheet("player_idle", "./assets/Animations/PlayerIdleAnim.png", {frameWidth: 191, frameHeight: 185, startFrame: 0, endFrame: 4});
+        this.load.spritesheet("player_jump", "./assets/Animations/PlayerJumpAnim.png", {frameWidth: 210, frameHeight: 185, startFrame: 0, endFrame: 1});
+        //this.load.spritesheet("player_land", "./assets/Animations/PlayerLandAnim.png", {frameWidth: 190, frameHeight: 185, startFrame: 0, endFrame: 2});
     }
 
     create() {
@@ -23,6 +25,7 @@ class level02 extends Phaser.Scene {
         this.playerWin = false;
         this.goLeft01 = false;
         this.goRight01 = false;
+        this.justJumped = false;
 
         // set bounds of world so player can't walk off
         this.physics.world.setBounds(0, 0, game.config.width * 2.5, game.config.height , true, false, true, true);
@@ -49,16 +52,28 @@ class level02 extends Phaser.Scene {
         this.anims.create({
             key: 'player-idle',
             frames: this.anims.generateFrameNumbers('player_idle', { start: 0, end: 4, first: 0}),
-            frameRate: 8,
+            frameRate: 10,
             loop: true
         });
         // create walk animation for player
         this.anims.create({
             key: 'player-walk',
-            frames: this.anims.generateFrameNumbers('player_walk', { start: 0, end: 0, first: 0}),
-            frameRate: 8,
+            frames: this.anims.generateFrameNumbers('player_walk', { start: 0, end: 8, first: 0}),
+            frameRate: 15,
             loop: true
         });
+        // create jump animation for player
+        this.anims.create({
+            key: 'player-jump',
+            frames: this.anims.generateFrameNumbers('player_jump', { start: 0, end: 1, first: 0}),
+            frameRate: 15,
+        });
+         // create landing animation for player
+        //  this.anims.create({
+        //     key: 'player-land',
+        //     frames: this.anims.generateFrameNumbers('player_land', { start: 0, end: 2, first: 0}),
+        //     frameRate: 5,
+        // });
 
         // create keybinds
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -67,10 +82,10 @@ class level02 extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // create the player
-        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.085);
+        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.3);
         this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
-        this.player.body.setSize(450, 731);
+        this.player.body.setSize(140, 185);
 
         // change background color
         this.cameras.main.setBackgroundColor("#227B96");
@@ -184,13 +199,13 @@ class level02 extends Phaser.Scene {
 
         this.enemyGroup = this.add.group();
         // create enemies
-        this.enemy01 = this.physics.add.sprite(tileSize * 16, game.config.height - (tileSize * 3), "enemy").setScale(0.1);
+        this.enemy01 = this.physics.add.sprite(tileSize * 16, game.config.height - (tileSize * 3), "enemy").setScale(0.3);
         this.enemy01.body.setSize(500, 820);
         this.enemyGroup.add(this.enemy01);
-        this.enemy02 = this.physics.add.sprite(tileSize * 56, game.config.height - (tileSize * 19), "enemy").setScale(0.11);
+        this.enemy02 = this.physics.add.sprite(tileSize * 56, game.config.height - (tileSize * 19), "enemy").setScale(0.45);
         this.enemy02.body.setSize(500, 820);
         this.enemyGroup.add(this.enemy02);
-        this.enemy03= this.physics.add.sprite(tileSize * 57, game.config.height - (tileSize * 2), "enemy").setScale(0.06);
+        this.enemy03= this.physics.add.sprite(tileSize * 57, game.config.height - (tileSize * 2), "enemy").setScale(0.17);
         this.enemy03.body.setSize(500, 820);
         this.enemyGroup.add(this.enemy03);
         // set up colliders for player and enemies
@@ -236,6 +251,13 @@ class level02 extends Phaser.Scene {
                 this.player.body.setAccelerationX(0);
                 this.player.body.setDragX(2500);
                 this.player.anims.play("player-idle", true);
+            }
+
+            // play jump animation
+            if(!this.player.body.touching.down) {
+                this.player.anims.play("player-jump", true);
+                this.justJumped = true;
+                
             }
 
             // allow player to jump
