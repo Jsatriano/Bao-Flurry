@@ -11,6 +11,8 @@ class Level01 extends Phaser.Scene {
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
         this.load.image("vicText", "./assets/victory text.png");
+        this.load.spritesheet("player_walk", "./assets/Player.png", {frameWidth: 771, frameHeight: 731, startFrame: 0, endFrame: 0});
+        this.load.spritesheet("player_idle", "./assets/Player_Idle.png", {frameWidth: 796, frameHeight: 771, startFrame: 0, endFrame: 4});
     }
 
     create() {
@@ -39,6 +41,21 @@ class Level01 extends Phaser.Scene {
         });
         this.music.play();
 
+        // create idle animation for player
+        this.anims.create({
+            key: 'player-idle',
+            frames: this.anims.generateFrameNumbers('player_idle', { start: 0, end: 4, first: 0}),
+            frameRate: 8,
+            loop: true
+        });
+        // create walk animation for player
+        this.anims.create({
+            key: 'player-walk',
+            frames: this.anims.generateFrameNumbers('player_walk', { start: 0, end: 0, first: 0}),
+            frameRate: 8,
+            loop: true
+        });
+
         // create keybinds
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
@@ -46,10 +63,10 @@ class Level01 extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         
         // create the player
-        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.3);
+        this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.085);
         this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
-        this.player.body.setSize(130, 171);
+        this.player.body.setSize(450, 731);
         
         // change background color
         this.cameras.main.setBackgroundColor("#227B96");
@@ -137,12 +154,15 @@ class Level01 extends Phaser.Scene {
             if(keyA.isDown) {
                 this.player.body.setAccelerationX(-acceleration);
                 this.player.setFlip(true, false);
+                this.player.anims.play("player-walk", true);
             } else if(keyD.isDown) {
                 this.player.body.setAccelerationX(acceleration);
                 this.player.resetFlip();
+                this.player.anims.play("player-walk", true);
             } else {
                 this.player.body.setAccelerationX(0);
                 this.player.body.setDragX(2500);
+                this.player.anims.play("player-idle", true);
             }
 
             // allow player to jump
