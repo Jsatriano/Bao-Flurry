@@ -1,5 +1,11 @@
 // TO DO 
-// create an enemy class that patrols an area
+// sfx:
+//  jump
+//  get another death sound for spikes
+//  bounce pad sfx
+// 
+// animaitons:
+//  death
 let config = {
     type: Phaser.CANVAS,
     width: 1280,
@@ -35,4 +41,6 @@ let jumpVelocity = -1000;
 let centerX = game.config.width / 2;
 let centerY = game.config.height / 2;
 const tileSize = 32;
+let onLevel01 = false;
+let onLevel02 = false;
 

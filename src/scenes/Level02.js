@@ -16,6 +16,7 @@ class level02 extends Phaser.Scene {
         this.load.spritesheet("player_walk", "./assets/Animations/PlayerRunAnim.png", {frameWidth: 200, frameHeight: 189, startFrame: 0, endFrame: 8});
         this.load.spritesheet("player_idle", "./assets/Animations/PlayerIdleAnim.png", {frameWidth: 191, frameHeight: 185, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_jump", "./assets/Animations/PlayerJumpAnim.png", {frameWidth: 210, frameHeight: 185, startFrame: 0, endFrame: 1});
+        this.load.spritesheet("enemy_idle", "./assets/Animations/EnemyIdleAnim.png", {frameWidth: 150, frameHeight: 210, startFrame: 0, endFrame: 4});
         //this.load.spritesheet("player_land", "./assets/Animations/PlayerLandAnim.png", {frameWidth: 190, frameHeight: 185, startFrame: 0, endFrame: 2});
     }
 
@@ -23,9 +24,7 @@ class level02 extends Phaser.Scene {
         //reset variables
         this.playerDead = false;
         this.playerWin = false;
-        this.goLeft01 = false;
-        this.goRight01 = false;
-        this.justJumped = false;
+        onLevel02 = true;
 
         // set bounds of world so player can't walk off
         this.physics.world.setBounds(0, 0, game.config.width * 2.5, game.config.height , true, false, true, true);
@@ -67,6 +66,12 @@ class level02 extends Phaser.Scene {
             key: 'player-jump',
             frames: this.anims.generateFrameNumbers('player_jump', { start: 0, end: 1, first: 0}),
             frameRate: 15,
+        });
+        this.anims.create({
+            key: 'enemy-idle',
+            frames: this.anims.generateFrameNumbers('enemy_idle', { start: 0, end: 4, first: 0}),
+            frameRate: 10,
+            loop: true
         });
          // create landing animation for player
         //  this.anims.create({
@@ -188,7 +193,7 @@ class level02 extends Phaser.Scene {
         this.createSpike(tileSize * 53, game.config.height - (tileSize * 2), true);     // 
 
         this.createSpike(tileSize * 76, game.config.height - (tileSize * 17), true);    //  spikes leading to fake flag
-        this.createSpike(tileSize * 79, game.config.height - (tileSize * 17), true);    //
+        this.createSpike(tileSize * 80, game.config.height - (tileSize * 17), true);    //
 
         this.createSpike(tileSize * 68, game.config.height - (tileSize * 7), true);     //   spikes inside cube
         this.createSpike(tileSize * 69, game.config.height - (tileSize * 7), true);     //
@@ -200,13 +205,13 @@ class level02 extends Phaser.Scene {
         this.enemyGroup = this.add.group();
         // create enemies
         this.enemy01 = this.physics.add.sprite(tileSize * 16, game.config.height - (tileSize * 3), "enemy").setScale(0.3);
-        this.enemy01.body.setSize(500, 820);
+        this.enemy01.body.setSize(120, 201);
         this.enemyGroup.add(this.enemy01);
         this.enemy02 = this.physics.add.sprite(tileSize * 56, game.config.height - (tileSize * 19), "enemy").setScale(0.45);
-        this.enemy02.body.setSize(500, 820);
+        this.enemy02.body.setSize(120, 201);
         this.enemyGroup.add(this.enemy02);
         this.enemy03= this.physics.add.sprite(tileSize * 57, game.config.height - (tileSize * 2), "enemy").setScale(0.17);
-        this.enemy03.body.setSize(500, 820);
+        this.enemy03.body.setSize(120, 201);
         this.enemyGroup.add(this.enemy03);
         // set up colliders for player and enemies
         this.physics.add.collider(this.player, this.platforms);
@@ -269,32 +274,38 @@ class level02 extends Phaser.Scene {
         // patrolling movement for enemy01
         if(this.enemy01.x <= tileSize * 16) {
             this.enemy01.body.setVelocityX(0);
-            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(150); this.enemy01.resetFlip(); });
+            this.enemy01.anims.play("enemy-idle", true);
+            this.time.delayedCall(5000, () => { this.enemy01.body.setVelocityX(150); this.enemy01.resetFlip(); this.enemy01.anims.stop("enemy-idle"); });
         }
 
         if(this.enemy01.x >= tileSize * 25) {
             this.enemy01.body.setVelocityX(0);
-            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(-150); this.enemy01.setFlip(true, false); });
+            this.enemy01.anims.play("enemy-idle", true);
+            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(-150); this.enemy01.setFlip(true, false); this.enemy01.anims.stop("enemy-idle");});
         }
         // patrolling movement for enemy02
         if(this.enemy02.x <= tileSize * 56) {
             this.enemy02.body.setVelocityX(0);
-            this.time.delayedCall(500, () => { this.enemy02.body.setVelocityX(150); this.enemy02.resetFlip(); });
+            this.enemy02.anims.play("enemy-idle", true);
+            this.time.delayedCall(500, () => { this.enemy02.body.setVelocityX(150); this.enemy02.resetFlip(); this.enemy02.anims.stop("enemy-idle");});
         }
 
         if(this.enemy02.x >= tileSize * 70) {
             this.enemy02.body.setVelocityX(0);
-            this.time.delayedCall(1500, () => { this.enemy02.body.setVelocityX(-150); this.enemy02.setFlip(true, false); });
+            this.enemy02.anims.play("enemy-idle", true);
+            this.time.delayedCall(1500, () => { this.enemy02.body.setVelocityX(-150); this.enemy02.setFlip(true, false); this.enemy02.anims.stop("enemy-idle");});
         }
         // patrolling movement for enemy03
         if(this.enemy03.x <= tileSize * 57) {
             this.enemy03.body.setVelocityX(0);
-            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(225); this.enemy03.resetFlip(); });
+            this.enemy03.anims.play("enemy-idle", true);
+            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(225); this.enemy03.resetFlip(); this.enemy03.anims.stop("enemy-idle");});
         }
 
         if(this.enemy03.x >= tileSize * 76) {
             this.enemy03.body.setVelocityX(0);
-            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(-225); this.enemy03.setFlip(true, false); });
+            this.enemy03.anims.play("enemy-idle", true);
+            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(-225); this.enemy03.setFlip(true, false); this.enemy03.anims.stop("enemy-idle");});
         }
 
         // trigger the obstacle to drop on the player
@@ -342,7 +353,7 @@ class level02 extends Phaser.Scene {
 
     levelWin() {
         this.music.stop();
-        this.sound.play("sfx_victory", {volume: 0.2});
+        this.sound.play("sfx_victory", {volume: 0.05});
         this.playerDead = true;
         this.playerWin = true;
         let sparks = this.add.particles('spark');    
@@ -354,6 +365,7 @@ class level02 extends Phaser.Scene {
         emitter.setLifespan(850);
 
         this.vicText.alpha = 1;
+        onLevel02 = false;
         //this.time.delayedCall(3000, () => { this.scene.start("menuScene"); });
     }
 

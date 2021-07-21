@@ -21,6 +21,7 @@ class Level01 extends Phaser.Scene {
         //reset variables
         this.playerDead = false;
         this.playerWin = false;
+        onLevel01 = true;
 
         // set bounds of world so player can't walk off
         this.physics.world.setBounds(0, 0, game.config.width * 2, game.config.height , true, false, true, true);
@@ -185,7 +186,7 @@ class Level01 extends Phaser.Scene {
                 this.justJumped = true;
                 
             }
-            
+
             // allow player to jump
             if(this.player.body.touching.down && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.player.body.setVelocityY(jumpVelocity);
@@ -228,7 +229,7 @@ class Level01 extends Phaser.Scene {
 
     levelWin() {
         this.music.stop();
-        this.sound.play("sfx_victory", {volume: 0.2});
+        this.sound.play("sfx_victory", {volume: 0.05});
         this.playerDead = true;
         this.playerWin = true;
         let sparks = this.add.particles('spark');    
@@ -240,6 +241,7 @@ class Level01 extends Phaser.Scene {
         emitter.setLifespan(850);
 
         this.vicText.alpha = 1;
+        onLevel01 = false;
         //this.time.delayedCall(3000, () => { this.scene.start("menuScene"); });
     }
 
