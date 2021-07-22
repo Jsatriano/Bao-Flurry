@@ -29,13 +29,19 @@ class Menu extends Phaser.Scene {
 
         // create keybinds
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
     }
 
     update() {
-        this.scene.start("level02");
+        //this.scene.start("level02");
         if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.sound.play("sfx_select");
             this.scene.start("level01");
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(keyC)) {
+            this.sound.play("sfx_select");
+            this.scene.start("creditScene");
         }
         
     }

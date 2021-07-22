@@ -4,7 +4,7 @@ class level02 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("obstacle", "./assets/test-obstacle.png");
+        this.load.image("claw", "./assets/claw.png");
         this.load.image("lollipopSpike", "./assets/candycanespike.png");
         this.load.image("player", "./assets/Player.png");
         this.load.image("enemy", "./assets/Enemy.png");
@@ -235,7 +235,7 @@ class level02 extends Phaser.Scene {
         this.fakeFlag.depth = 2;
 
         // create drop down obstacle
-        this.obstacle = new ObstacleDrop(this, tileSize * 81, -64).setScale(2).setOrigin(0);
+        this.obstacle = new ObstacleDrop(this, tileSize * 87, -64).setScale(1.4).setOrigin(1);
         this.obstacle.body.setAllowGravity(false);
         this.obstacle.depth = -1;
 
@@ -275,7 +275,7 @@ class level02 extends Phaser.Scene {
         if(this.enemy01.x <= tileSize * 16) {
             this.enemy01.body.setVelocityX(0);
             this.enemy01.anims.play("enemy-idle", true);
-            this.time.delayedCall(5000, () => { this.enemy01.body.setVelocityX(150); this.enemy01.resetFlip(); this.enemy01.anims.stop("enemy-idle"); });
+            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(150); this.enemy01.resetFlip(); this.enemy01.anims.stop("enemy-idle"); });
         }
 
         if(this.enemy01.x >= tileSize * 25) {
@@ -315,6 +315,15 @@ class level02 extends Phaser.Scene {
         // once obstacle is triggered, move it through screen
         if(this.obstacleTrigger) {
             this.obstacle.body.y += 10;
+        }
+        // once obstacle reaches bottom of screen, retract it
+        if(this.obstacle.y >= game.config.height - (tileSize * 16)) {
+            this.obstacleTrigger = false;
+            this.obstacleRetract = true;
+        }
+        // move it back up
+        if(this.obstacleRetract) {
+            this.obstacle.body.y -= 12;
         }
 
         // if player has  reached the flag, new keybinds are available

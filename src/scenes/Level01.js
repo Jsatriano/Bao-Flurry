@@ -4,7 +4,7 @@ class Level01 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("obstacle", "./assets/test-obstacle.png");
+        this.load.image("claw", "./assets/claw.png");
         this.load.image("lollipopSpike", "./assets/candycanespike.png");
         this.load.image("player", "./assets/Player.png");
         this.load.image("terrain", "./assets/block.png");
@@ -21,6 +21,8 @@ class Level01 extends Phaser.Scene {
         //reset variables
         this.playerDead = false;
         this.playerWin = false;
+        this.obstacleTrigger = false;
+        this.obstacleRetract = false;
         onLevel01 = true;
 
         // set bounds of world so player can't walk off
@@ -112,7 +114,7 @@ class Level01 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
 
         // create drop down obstacle
-        this.obstacle = new ObstacleDrop(this, tileSize * 35, -64).setScale(2).setOrigin(0);
+        this.obstacle = new ObstacleDrop(this, tileSize * 40, -64).setScale(1).setOrigin(1);
         this.obstacle.body.setAllowGravity(false);
         this.obstacle.depth = -1;
 
@@ -205,13 +207,24 @@ class Level01 extends Phaser.Scene {
         }
 
         // trigger the obstacle to drop on the player
-        if(this.player.x >= tileSize * 33) {
+        if(this.player.x >= tileSize * 33 && !this.obstacleRetract) {
             this.obstacleTrigger = true;
         }
         // once obstacle is triggered, move it through screen
         if(this.obstacleTrigger) {
-            this.obstacle.body.y += 15;
+            this.obstacle.body.y += 18;
         }
+        // once obstacle reaches bottom of screen, retract it
+        if(this.obstacle.y >= game.config.height - tileSize) {
+            this.obstacleTrigger = false;
+            this.obstacleRetract = true;
+        }
+        // move it back up
+        if(this.obstacleRetract) {
+            this.obstacle.body.y -= 12;
+        }
+
+        
 
         // if player collides with bad stuff, do whatever playerCollision function does
         this.physics.world.collide(this.player, this.obstacle, this.playerCollision, null, this);
