@@ -11,9 +11,13 @@ class Menu extends Phaser.Scene {
         this.load.audio("sfx_victory", "./assets/sfx/victory.wav");
         this.load.audio("sfx_jump", "./assets/sfx/jump.wav");
         this.load.audio("sfx_bounce", "./assets/sfx/bounce.wav");
+        this.load.image("menu", "./assets/final game menu.png");
     }
 
     create() {
+        this.menu = this.add.tileSprite(0, 0, 1280, 720, 'menu').setOrigin(0,0);
+        
+        /*
         let tempText = {
             fontFamily: 'Verdana',
             fontSize: '32px',
@@ -28,6 +32,7 @@ class Menu extends Phaser.Scene {
         this.add.rectangle(0, 0, game.config.width, game.config.height, 0xFACADE).setOrigin(0, 0);
         this.add.text(centerX, centerY, "main menu", tempText).setOrigin(0.5);
         this.add.text(centerX, centerY + 64, "press (space) to play", tempText).setOrigin(0.5);
+        */
 
         // create keybinds
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
