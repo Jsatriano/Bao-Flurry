@@ -8,7 +8,7 @@ class level02 extends Phaser.Scene {
         this.load.image("lollipopSpike", "./assets/candycanespike.png");
         this.load.image("player", "./assets/Player.png");
         this.load.image("enemy", "./assets/Enemy.png");
-        this.load.image("terrain2", "./assets/block2.png");
+        this.load.image("terrain2", "./assets/blockBorder2.png");
         this.load.image("bounceBlock", "./assets/block-bounce.png");
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
@@ -28,11 +28,6 @@ class level02 extends Phaser.Scene {
 
         // set bounds of world so player can't walk off
         this.physics.world.setBounds(0, 0, game.config.width * 2.5, game.config.height , true, false, true, true);
-
-        // add victory text and hide it
-        this.vicText = this.add.tileSprite(game.config.width * 1.5, 0, 1280, 720, "vicText").setOrigin(0, 0);
-        this.vicText.alpha = 0;
-        this.vicText.depth = 3;
 
         // set gravity
         this.physics.world.gravity.y = 3000;
@@ -90,7 +85,7 @@ class level02 extends Phaser.Scene {
         this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.3);
         this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
-        this.player.body.setSize(140, 185);
+        this.player.body.setSize(130, 185);
 
         // change background color
         this.cameras.main.setBackgroundColor("#227B96");
@@ -198,7 +193,7 @@ class level02 extends Phaser.Scene {
         this.createSpike(tileSize * 68, game.config.height - (tileSize * 7), true);     //   spikes inside cube
         this.createSpike(tileSize * 69, game.config.height - (tileSize * 7), true);     //
         this.createSpike(tileSize * 63, game.config.height - (tileSize * 2), false);    //
-        this.createSpike(tileSize * 70, game.config.height - (tileSize * 2), false);    //
+        this.createSpike(tileSize * 70, game.config.height - (tileSize * 2), true);     //
         
         // ------- FINISHED CREATING SPIKES -------
 
@@ -268,6 +263,25 @@ class level02 extends Phaser.Scene {
             // allow player to jump
             if(this.player.body.touching.down && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.player.body.setVelocityY(jumpVelocity);
+                this.sound.play("sfx_jump", {volume: 0.2});
+            }
+
+            // trigger the obstacle to drop on the player
+            if(this.player.x >= tileSize * 78.5 && this.player.x <= tileSize * 79  && this.player.y <= game.config.height - (tileSize * 10)) {
+                this.obstacleTrigger = true;
+            }
+            // once obstacle is triggered, move it through screen
+            if(this.obstacleTrigger) {
+                this.obstacle.body.y += 10;
+            }
+            // once obstacle reaches bottom of screen, retract it
+            if(this.obstacle.y >= game.config.height - (tileSize * 16)) {
+                this.obstacleTrigger = false;
+                this.obstacleRetract = true;
+            }
+            // move it back up
+            if(this.obstacleRetract) {
+                this.obstacle.body.y -= 12;
             }
         }
 
@@ -308,34 +322,11 @@ class level02 extends Phaser.Scene {
             this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(-225); this.enemy03.setFlip(true, false); this.enemy03.anims.stop("enemy-idle");});
         }
 
-        // trigger the obstacle to drop on the player
-        if(this.player.x >= tileSize * 78.5 && this.player.x <= tileSize * 79  && this.player.y <= game.config.height - (tileSize * 10)) {
-            this.obstacleTrigger = true;
-        }
-        // once obstacle is triggered, move it through screen
-        if(this.obstacleTrigger) {
-            this.obstacle.body.y += 10;
-        }
-        // once obstacle reaches bottom of screen, retract it
-        if(this.obstacle.y >= game.config.height - (tileSize * 16)) {
-            this.obstacleTrigger = false;
-            this.obstacleRetract = true;
-        }
-        // move it back up
-        if(this.obstacleRetract) {
-            this.obstacle.body.y -= 12;
-        }
+        
 
         // if player has  reached the flag, new keybinds are available
         if(this.playerWin) {
-            if(Phaser.Input.Keyboard.JustDown(keyR)) {
-                this.sound.play("sfx_select");
-                this.scene.start("level02");
-            }
-            if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
-                this.sound.play("sfx_select");
-                this.scene.start("menuScene");
-            }
+            this.time.delayedCall(3000, () => { this.scene.start("victoryScene"); });
         }
 
         // add colliders
@@ -373,9 +364,7 @@ class level02 extends Phaser.Scene {
         emitter.setScale(0.7);
         emitter.setLifespan(850);
 
-        this.vicText.alpha = 1;
         onLevel02 = false;
-        //this.time.delayedCall(3000, () => { this.scene.start("menuScene"); });
     }
 
     createTerrainHorizontal(start, finish, height) {

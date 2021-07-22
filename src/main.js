@@ -23,7 +23,7 @@ let config = {
             }
         }
     },
-    scene: [Menu, Level01, GameOver, level02, Credits]
+    scene: [Menu, Level01, GameOver, level02, Credits, Victory]
 }
 
 // set game up

@@ -7,7 +7,7 @@ class Level01 extends Phaser.Scene {
         this.load.image("claw", "./assets/claw.png");
         this.load.image("lollipopSpike", "./assets/candycanespike.png");
         this.load.image("player", "./assets/Player.png");
-        this.load.image("terrain", "./assets/block.png");
+        this.load.image("terrain", "./assets/blockBorder.png");
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
         this.load.image("vicText", "./assets/victory text.png");
@@ -83,7 +83,7 @@ class Level01 extends Phaser.Scene {
         this.player = this.physics.add.sprite(tileSize * 2, game.config.height - (tileSize * 3), "player").setScale(0.3);
         this.player.body.setCollideWorldBounds(true);
         this.player.setMaxVelocity(max_x_vel, max_y_vel);
-        this.player.body.setSize(140, 185);
+        this.player.body.setSize(130, 185);
         
         // change background color
         this.cameras.main.setBackgroundColor("#227B96");
@@ -192,6 +192,25 @@ class Level01 extends Phaser.Scene {
             // allow player to jump
             if(this.player.body.touching.down && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.player.body.setVelocityY(jumpVelocity);
+                this.sound.play("sfx_jump", {volume: 0.2});
+            }
+
+            // trigger the obstacle to drop on the player
+            if(this.player.x >= tileSize * 33 && !this.obstacleRetract) {
+                this.obstacleTrigger = true;
+            }
+            // once obstacle is triggered, move it through screen
+            if(this.obstacleTrigger) {
+                this.obstacle.body.y += 18;
+            }
+            // once obstacle reaches bottom of screen, retract it
+            if(this.obstacle.y >= game.config.height - tileSize) {
+                this.obstacleTrigger = false;
+                this.obstacleRetract = true;
+            }
+            // move it back up
+            if(this.obstacleRetract) {
+                this.obstacle.body.y -= 12;
             }
         }
 
@@ -205,26 +224,6 @@ class Level01 extends Phaser.Scene {
                 this.scene.start("menuScene");
             }
         }
-
-        // trigger the obstacle to drop on the player
-        if(this.player.x >= tileSize * 33 && !this.obstacleRetract) {
-            this.obstacleTrigger = true;
-        }
-        // once obstacle is triggered, move it through screen
-        if(this.obstacleTrigger) {
-            this.obstacle.body.y += 18;
-        }
-        // once obstacle reaches bottom of screen, retract it
-        if(this.obstacle.y >= game.config.height - tileSize) {
-            this.obstacleTrigger = false;
-            this.obstacleRetract = true;
-        }
-        // move it back up
-        if(this.obstacleRetract) {
-            this.obstacle.body.y -= 12;
-        }
-
-        
 
         // if player collides with bad stuff, do whatever playerCollision function does
         this.physics.world.collide(this.player, this.obstacle, this.playerCollision, null, this);
