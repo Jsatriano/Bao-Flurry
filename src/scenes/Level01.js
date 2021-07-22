@@ -11,12 +11,12 @@ class Level01 extends Phaser.Scene {
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
         this.load.image("vicText", "./assets/victory text.png");
+        this.load.image("background", "./assets/candycaneBackground.png");
         this.load.spritesheet("player_walk", "./assets/Animations/PlayerRunAnim.png", {frameWidth: 200, frameHeight: 189, startFrame: 0, endFrame: 8});
         this.load.spritesheet("player_idle", "./assets/Animations/PlayerIdleAnim.png", {frameWidth: 191, frameHeight: 185, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_jump", "./assets/Animations/PlayerJumpAnim.png", {frameWidth: 210, frameHeight: 185, startFrame: 0, endFrame: 1});
         this.load.spritesheet("player_deathClaw", "./assets/Animations/PlayerDeath(2)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_deathSpike", "./assets/Animations/PlayerDeath(3)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 3});
-        //this.load.spritesheet("player_land", "./assets/Animations/PlayerLandAnim.png", {frameWidth: 190, frameHeight: 185, startFrame: 0, endFrame: 2});
     }
 
     create() {
@@ -29,6 +29,11 @@ class Level01 extends Phaser.Scene {
 
         // set bounds of world so player can't walk off
         this.physics.world.setBounds(0, 0, game.config.width * 2, game.config.height , true, false, true, true);
+
+        this.background01 = this.add.tileSprite(0, 0, 1280, 720, "background").setOrigin(0, 0);
+        this.background02 = this.add.tileSprite(1280, 0, 1280, 720, "background").setOrigin(0, 0);
+        this.background01.depth = -2;
+        this.background02.depth = -2;
 
         // add victory text and hide it
         this.vicText = this.add.tileSprite(1280, 0, 1280, 720, "vicText").setOrigin(0, 0);
@@ -180,6 +185,10 @@ class Level01 extends Phaser.Scene {
     }
 
     update() {
+
+        this.background01.tilePositionX += 0.2;
+        this.background02.tilePositionX += 0.2;
+
         // set left and right movement
         if(!this.playerDead) {
             if(keyA.isDown) {
@@ -206,7 +215,7 @@ class Level01 extends Phaser.Scene {
             // allow player to jump
             if(this.player.body.touching.down && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.player.body.setVelocityY(jumpVelocity);
-                this.sound.play("sfx_jump", {volume: 0.2});
+                this.sound.play("sfx_bounce", {volume: 0.2});
             }
 
             // trigger the obstacle to drop on the player

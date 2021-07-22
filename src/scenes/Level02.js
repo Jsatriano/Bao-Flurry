@@ -13,6 +13,7 @@ class level02 extends Phaser.Scene {
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
         this.load.image("vicText", "./assets/victory text.png");
+        this.load.image("cloud", "./assets/cloud.png");
         this.load.spritesheet("player_walk", "./assets/Animations/PlayerRunAnim.png", {frameWidth: 200, frameHeight: 189, startFrame: 0, endFrame: 8});
         this.load.spritesheet("player_idle", "./assets/Animations/PlayerIdleAnim.png", {frameWidth: 191, frameHeight: 185, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_jump", "./assets/Animations/PlayerJumpAnim.png", {frameWidth: 210, frameHeight: 185, startFrame: 0, endFrame: 1});
@@ -21,8 +22,6 @@ class level02 extends Phaser.Scene {
         this.load.spritesheet("player_deathEnemy", "./assets/Animations/PlayerDeath(1)Anim.png", {frameWidth: 180, frameHeight: 181, startFrame: 0, endFrame: 3});
         this.load.spritesheet("player_deathClaw", "./assets/Animations/PlayerDeath(2)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_deathSpike", "./assets/Animations/PlayerDeath(3)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 3});
-        
-        //this.load.spritesheet("player_land", "./assets/Animations/PlayerLandAnim.png", {frameWidth: 190, frameHeight: 185, startFrame: 0, endFrame: 2});
     }
 
     create() {
@@ -32,14 +31,26 @@ class level02 extends Phaser.Scene {
         this.enemy01Move = false;
         this.enemy02Move = false;
         this.enemy03Move = false;
+        this.obstacleTrigger = false;
+        this.obstacleRetract = false;
         onLevel02 = true;
+        
         // set bounds of world so player can't walk off
         this.physics.world.setBounds(0, 0, game.config.width * 2.5, game.config.height , true, false, true, true);
 
         // set gravity
         this.physics.world.gravity.y = 3000;
-        
-        this.obstacleTrigger = false;
+
+        // create cloud objects for parallax scrolling
+        this.cloud01 = this.physics.add.sprite(2000, 150, "cloud").setScale(1.2);
+        this.cloud01.body.setAllowGravity(false).setVelocityX(70);
+        this.cloud02 = this.physics.add.sprite(100, 50, "cloud").setScale(0.4);
+        this.cloud02.body.setAllowGravity(false).setVelocityX(130);
+        this.cloud02.depth = -2;
+        this.cloud03 = this.physics.add.sprite(1000, 200, "cloud").setScale(0.7);
+        this.cloud03.body.setAllowGravity(false).setVelocityX(100);
+        this.cloud04 = this.physics.add.sprite(2800, 400, "cloud").setScale(1.5);
+        this.cloud04.body.setAllowGravity(false).setVelocityX(40);
 
         // create and play background music
         this.music = this.sound.add("sfx_music02", {
@@ -101,12 +112,6 @@ class level02 extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('player_deathEnemy', { start: 0, end: 3, first: 0}),
             frameRate: 10
         });
-         // create landing animation for player
-        //  this.anims.create({
-        //     key: 'player-land',
-        //     frames: this.anims.generateFrameNumbers('player_land', { start: 0, end: 2, first: 0}),
-        //     frameRate: 5,
-        // });
 
         // create keybinds
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -197,10 +202,8 @@ class level02 extends Phaser.Scene {
         
         // create the bounce blocks
         this.createBounceBlock(tileSize * 61, tileSize * 63, game.config.height - (tileSize * 6) - 1);  // bounce blocks inside cube
-
         this.createBounceBlock(tileSize * 86, tileSize * 89, game.config.height - (tileSize * 1) - 1);  // bounce blocks before real flag
 
-        
         // create fake and real spike groups
         this.popFakeGroup = this.add.group();
         this.popRealGroup = this.add.group();
@@ -227,9 +230,9 @@ class level02 extends Phaser.Scene {
         this.createSpike(tileSize * 69, game.config.height - (tileSize * 7), true);     //
         this.createSpike(tileSize * 63, game.config.height - (tileSize * 2), false);    //
         this.createSpike(tileSize * 70, game.config.height - (tileSize * 2), true);     //
-        
         // ------- FINISHED CREATING SPIKES -------
 
+        // create enemy group
         this.enemyGroup = this.add.group();
         // create enemies
         this.enemy01 = this.physics.add.sprite(tileSize * 16, game.config.height - (tileSize * 3), "enemy").setScale(0.3);
@@ -296,7 +299,7 @@ class level02 extends Phaser.Scene {
             // allow player to jump
             if(this.player.body.touching.down && Phaser.Input.Keyboard.JustDown(keySPACE)) {
                 this.player.body.setVelocityY(jumpVelocity);
-                this.sound.play("sfx_jump", {volume: 0.2});
+                this.sound.play("sfx_bounce", {volume: 0.2});
             }
 
             // trigger the obstacle to drop on the player
@@ -371,9 +374,6 @@ class level02 extends Phaser.Scene {
             this.enemy03.anims.play("enemy-walk", true);
         }
 
-
-        
-
         // if player has  reached the flag, new keybinds are available
         if(this.playerWin) {
             this.time.delayedCall(3000, () => { this.scene.start("victoryScene"); });
@@ -384,6 +384,12 @@ class level02 extends Phaser.Scene {
         this.physics.world.collide(this.player, this.popRealGroup, this.playerCollisionSpike, null, this);
         this.physics.world.collide(this.player, this.enemyGroup, this.playerCollisionEnemy, null, this);
         this.physics.world.collide(this.player, this.obstacle, this.playerCollisionClaw, null, this);
+
+        // wrap cloud objects
+        this.physics.world.wrap(this.cloud01, this.cloud01.width / 2);
+        this.physics.world.wrap(this.cloud02, this.cloud02.width / 2);
+        this.physics.world.wrap(this.cloud03, this.cloud03.width / 2);
+        this.physics.world.wrap(this.cloud04, this.cloud04.width / 2);
     }
 
     playerCollisionClaw() {
