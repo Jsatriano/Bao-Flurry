@@ -8,7 +8,7 @@ class level02 extends Phaser.Scene {
         this.load.image("lollipopSpike", "./assets/candycanespike.png");
         this.load.image("player", "./assets/Player.png");
         this.load.image("enemy", "./assets/Enemy.png");
-        this.load.image("terrain", "./assets/block.png");
+        this.load.image("terrain2", "./assets/block2.png");
         this.load.image("bounceBlock", "./assets/block-bounce.png");
         this.load.image("flag", "./assets/test-flag.png");
         this.load.image("spark", "./assets/spark.png");
@@ -210,7 +210,7 @@ class level02 extends Phaser.Scene {
         this.enemy02 = this.physics.add.sprite(tileSize * 56, game.config.height - (tileSize * 19), "enemy").setScale(0.45);
         this.enemy02.body.setSize(120, 201);
         this.enemyGroup.add(this.enemy02);
-        this.enemy03= this.physics.add.sprite(tileSize * 57, game.config.height - (tileSize * 2), "enemy").setScale(0.17);
+        this.enemy03= this.physics.add.sprite(tileSize * 57, game.config.height - (tileSize * 2), "enemy").setScale(0.21);
         this.enemy03.body.setSize(120, 201);
         this.enemyGroup.add(this.enemy03);
         // set up colliders for player and enemies
@@ -380,7 +380,7 @@ class level02 extends Phaser.Scene {
 
     createTerrainHorizontal(start, finish, height) {
         for(let i = start; i < finish; i += tileSize) {
-            let groundTile = this.physics.add.sprite(i, height, "terrain").setScale(0.5).setOrigin(0);
+            let groundTile = this.physics.add.sprite(i, height, "terrain2").setScale(0.5).setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
             this.platforms.add(groundTile);
@@ -389,7 +389,7 @@ class level02 extends Phaser.Scene {
 
     createTerrainVertical(start, finish, tile) {
         for(let i = start; i < finish; i += tileSize) {
-            let groundTile = this.physics.add.sprite(tile, i, "terrain").setScale(0.5).setOrigin(0);
+            let groundTile = this.physics.add.sprite(tile, i, "terrain2").setScale(0.5).setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
             this.platforms.add(groundTile);
