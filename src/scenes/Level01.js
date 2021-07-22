@@ -14,6 +14,8 @@ class Level01 extends Phaser.Scene {
         this.load.spritesheet("player_walk", "./assets/Animations/PlayerRunAnim.png", {frameWidth: 200, frameHeight: 189, startFrame: 0, endFrame: 8});
         this.load.spritesheet("player_idle", "./assets/Animations/PlayerIdleAnim.png", {frameWidth: 191, frameHeight: 185, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_jump", "./assets/Animations/PlayerJumpAnim.png", {frameWidth: 210, frameHeight: 185, startFrame: 0, endFrame: 1});
+        this.load.spritesheet("player_deathClaw", "./assets/Animations/PlayerDeath(2)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 4});
+        this.load.spritesheet("player_deathSpike", "./assets/Animations/PlayerDeath(3)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 3});
         //this.load.spritesheet("player_land", "./assets/Animations/PlayerLandAnim.png", {frameWidth: 190, frameHeight: 185, startFrame: 0, endFrame: 2});
     }
 
@@ -64,7 +66,19 @@ class Level01 extends Phaser.Scene {
         this.anims.create({
             key: 'player-jump',
             frames: this.anims.generateFrameNumbers('player_jump', { start: 0, end: 1, first: 0}),
-            frameRate: 15,
+            frameRate: 15
+        });
+        // create death by claw player anim
+        this.anims.create({
+            key: 'death-claw',
+            frames: this.anims.generateFrameNumbers('player_deathClaw', { start: 0, end: 4, first: 0}),
+            frameRate: 10
+        });
+        // create death by spike player anim
+        this.anims.create({
+            key: 'death-spike',
+            frames: this.anims.generateFrameNumbers('player_deathSpike', { start: 0, end: 3, first: 0}),
+            frameRate: 10
         });
          // create landing animation for player
         //  this.anims.create({
@@ -226,17 +240,34 @@ class Level01 extends Phaser.Scene {
         }
 
         // if player collides with bad stuff, do whatever playerCollision function does
-        this.physics.world.collide(this.player, this.obstacle, this.playerCollision, null, this);
-        this.physics.world.collide(this.player, this.popRealGroup, this.playerCollision, null, this);
+        this.physics.world.collide(this.player, this.obstacle, this.playerCollisionClaw, null, this);
+        this.physics.world.collide(this.player, this.popRealGroup, this.playerCollisionSpike, null, this);
     }
 
-    playerCollision() {
+    playerCollisionClaw() {
         this.playerDead = true;
         this.sound.play("sfx_death");
         this.cameras.main.shake(1500, 0.0025);
+        let deathClaw = this.add.sprite(this.player.x, this.player.y, "player_deathClaw").setScale(0.3).setOrigin(0.4);
+        deathClaw.anims.play("death-claw");
+        deathClaw.on("animationcomplete", () => { deathClaw.destroy(); })
+        //this.player.anims.play("death-claw", true);
         this.player.destroy();
-        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
         this.music.stop();
+        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
+    }
+
+    playerCollisionSpike() {
+        this.playerDead = true;
+        this.sound.play("sfx_death");
+        this.cameras.main.shake(1500, 0.0025);
+        let deathSpike = this.add.sprite(this.player.x, this.player.y, "player_deathSpike").setScale(0.3).setOrigin(0.4);
+        deathSpike.anims.play("death-spike");
+        deathSpike.on("animationcomplete",  () => { deathSpike.destroy(); })
+        //this.player.anims.play("death-spike", true);
+        this.player.destroy();
+        this.music.stop();
+        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
     }
 
     levelWin() {
