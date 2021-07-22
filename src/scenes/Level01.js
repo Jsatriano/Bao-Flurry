@@ -100,7 +100,7 @@ class Level01 extends Phaser.Scene {
         this.player.body.setSize(130, 185);
         
         // change background color
-        this.cameras.main.setBackgroundColor("#227B96");
+        this.cameras.main.setBackgroundColor("#3B75A5");
 
         // set up other camera options
         this.cameras.main.setBounds(0, 0, game.config.width * 2, game.config.height);
@@ -250,11 +250,11 @@ class Level01 extends Phaser.Scene {
         this.cameras.main.shake(1500, 0.0025);
         let deathClaw = this.add.sprite(this.player.x, this.player.y, "player_deathClaw").setScale(0.3).setOrigin(0.4);
         deathClaw.anims.play("death-claw");
-        deathClaw.on("animationcomplete", () => { deathClaw.destroy(); })
+        //deathClaw.on("animationcomplete", () => { deathClaw.destroy(); })
         //this.player.anims.play("death-claw", true);
         this.player.destroy();
         this.music.stop();
-        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
+        this.time.delayedCall(2000, () => { deathClaw.destroy(); this.scene.start("gameOverScene"); });
     }
 
     playerCollisionSpike() {
@@ -263,11 +263,11 @@ class Level01 extends Phaser.Scene {
         this.cameras.main.shake(1500, 0.0025);
         let deathSpike = this.add.sprite(this.player.x, this.player.y, "player_deathSpike").setScale(0.3).setOrigin(0.4);
         deathSpike.anims.play("death-spike");
-        deathSpike.on("animationcomplete",  () => { deathSpike.destroy(); })
+        //deathSpike.on("animationcomplete",  () => { deathSpike.destroy(); })
         //this.player.anims.play("death-spike", true);
         this.player.destroy();
         this.music.stop();
-        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
+        this.time.delayedCall(2000, () => { deathSpike.destroy(); this.scene.start("gameOverScene"); });
     }
 
     levelWin() {

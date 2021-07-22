@@ -30,13 +30,14 @@ class Menu extends Phaser.Scene {
         this.add.text(centerX, centerY + 64, "press (space) to play", tempText).setOrigin(0.5);
 
         // create keybinds
-        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+        keyH = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H);
     }
 
     update() {
         //this.scene.start("level02");
-        if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
+        if(Phaser.Input.Keyboard.JustDown(keyS)) {
             this.sound.play("sfx_select");
             this.scene.start("level01");
         }
@@ -44,6 +45,10 @@ class Menu extends Phaser.Scene {
         if(Phaser.Input.Keyboard.JustDown(keyC)) {
             this.sound.play("sfx_select");
             this.scene.start("creditScene");
+        }
+        if(Phaser.Input.Keyboard.JustDown(keyH)) {
+            this.sound.play("sfx_select");
+            this.scene.start("howtoplayScene");
         }
         
     }

@@ -17,6 +17,7 @@ class level02 extends Phaser.Scene {
         this.load.spritesheet("player_idle", "./assets/Animations/PlayerIdleAnim.png", {frameWidth: 191, frameHeight: 185, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_jump", "./assets/Animations/PlayerJumpAnim.png", {frameWidth: 210, frameHeight: 185, startFrame: 0, endFrame: 1});
         this.load.spritesheet("enemy_idle", "./assets/Animations/EnemyIdleAnim.png", {frameWidth: 150, frameHeight: 210, startFrame: 0, endFrame: 4});
+        this.load.spritesheet("enemy_walk", "./assets/Animations/EnemyRunAnim.png", {frameWidth: 150, frameHeight: 210, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_deathEnemy", "./assets/Animations/PlayerDeath(1)Anim.png", {frameWidth: 180, frameHeight: 181, startFrame: 0, endFrame: 3});
         this.load.spritesheet("player_deathClaw", "./assets/Animations/PlayerDeath(2)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 4});
         this.load.spritesheet("player_deathSpike", "./assets/Animations/PlayerDeath(3)Anim.png", {frameWidth: 180, frameHeight: 191, startFrame: 0, endFrame: 3});
@@ -28,8 +29,10 @@ class level02 extends Phaser.Scene {
         //reset variables
         this.playerDead = false;
         this.playerWin = false;
+        this.enemy01Move = false;
+        this.enemy02Move = false;
+        this.enemy03Move = false;
         onLevel02 = true;
-
         // set bounds of world so player can't walk off
         this.physics.world.setBounds(0, 0, game.config.width * 2.5, game.config.height , true, false, true, true);
 
@@ -66,9 +69,17 @@ class level02 extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('player_jump', { start: 0, end: 1, first: 0}),
             frameRate: 15,
         });
+        // create idle animation for enemy
         this.anims.create({
             key: 'enemy-idle',
             frames: this.anims.generateFrameNumbers('enemy_idle', { start: 0, end: 4, first: 0}),
+            frameRate: 10,
+            loop: true
+        });
+        // create walking animation for enemy
+        this.anims.create({
+            key: 'enemy-walk',
+            frames: this.anims.generateFrameNumbers('enemy_walk', { start: 0, end: 4, first: 0}),
             frameRate: 10,
             loop: true
         });
@@ -110,7 +121,7 @@ class level02 extends Phaser.Scene {
         this.player.body.setSize(130, 185);
 
         // change background color
-        this.cameras.main.setBackgroundColor("#227B96");
+        this.cameras.main.setBackgroundColor("#3B75A5");
         
         // set up other camera options
         this.cameras.main.setBounds(0, 0, game.config.width * 2.5, game.config.height);
@@ -309,40 +320,57 @@ class level02 extends Phaser.Scene {
 
         // patrolling movement for enemy01
         if(this.enemy01.x <= tileSize * 16) {
+            this.enemy01Move = false;
             this.enemy01.body.setVelocityX(0);
             this.enemy01.anims.play("enemy-idle", true);
-            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(150); this.enemy01.resetFlip(); this.enemy01.anims.stop("enemy-idle"); });
+            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(150); this.enemy01.resetFlip(); this.enemy01.anims.stop("enemy-idle"); this.enemy01Move = true; });
         }
 
         if(this.enemy01.x >= tileSize * 25) {
+            this.enemy01Move = false;
             this.enemy01.body.setVelocityX(0);
             this.enemy01.anims.play("enemy-idle", true);
-            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(-150); this.enemy01.setFlip(true, false); this.enemy01.anims.stop("enemy-idle");});
+            this.time.delayedCall(300, () => { this.enemy01.body.setVelocityX(-150); this.enemy01.setFlip(true, false); this.enemy01.anims.stop("enemy-idle"); this.enemy01Move = true; });
         }
         // patrolling movement for enemy02
         if(this.enemy02.x <= tileSize * 56) {
+            this.enemy02Move = false;
             this.enemy02.body.setVelocityX(0);
             this.enemy02.anims.play("enemy-idle", true);
-            this.time.delayedCall(500, () => { this.enemy02.body.setVelocityX(150); this.enemy02.resetFlip(); this.enemy02.anims.stop("enemy-idle");});
+            this.time.delayedCall(500, () => { this.enemy02.body.setVelocityX(150); this.enemy02.resetFlip(); this.enemy02.anims.stop("enemy-idle"); this.enemy02Move = true; });
         }
 
         if(this.enemy02.x >= tileSize * 70) {
+            this.enemy02Move = false;
             this.enemy02.body.setVelocityX(0);
             this.enemy02.anims.play("enemy-idle", true);
-            this.time.delayedCall(1500, () => { this.enemy02.body.setVelocityX(-150); this.enemy02.setFlip(true, false); this.enemy02.anims.stop("enemy-idle");});
+            this.time.delayedCall(1500, () => { this.enemy02.body.setVelocityX(-150); this.enemy02.setFlip(true, false); this.enemy02.anims.stop("enemy-idle"); this.enemy02Move = true; });
         }
         // patrolling movement for enemy03
         if(this.enemy03.x <= tileSize * 57) {
+            this.enemy03Move = false;
             this.enemy03.body.setVelocityX(0);
             this.enemy03.anims.play("enemy-idle", true);
-            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(225); this.enemy03.resetFlip(); this.enemy03.anims.stop("enemy-idle");});
+            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(225); this.enemy03.resetFlip(); this.enemy03.anims.stop("enemy-idle"); this.enemy03Move = true; });
         }
 
         if(this.enemy03.x >= tileSize * 76) {
+            this.enemy03Move = false;
             this.enemy03.body.setVelocityX(0);
             this.enemy03.anims.play("enemy-idle", true);
-            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(-225); this.enemy03.setFlip(true, false); this.enemy03.anims.stop("enemy-idle");});
+            this.time.delayedCall(100, () => { this.enemy03.body.setVelocityX(-225); this.enemy03.setFlip(true, false); this.enemy03.anims.stop("enemy-idle"); this.enemy03Move = true; });
         }
+
+        if(this.enemy01Move) {
+            this.enemy01.anims.play("enemy-walk", true);
+        }
+        if(this.enemy02Move) {
+            this.enemy02.anims.play("enemy-walk", true);
+        }
+        if(this.enemy03Move) {
+            this.enemy03.anims.play("enemy-walk", true);
+        }
+
 
         
 
@@ -364,10 +392,10 @@ class level02 extends Phaser.Scene {
         this.cameras.main.shake(1500, 0.0025);
         let deathClaw = this.add.sprite(this.player.x, this.player.y, "player_deathClaw").setScale(0.3).setOrigin(0.4);
         deathClaw.anims.play("death-claw");
-        deathClaw.on("animationcomplete", () => { deathClaw.destroy(); })
+        //deathClaw.on("animationcomplete", () => { deathClaw.destroy(); })
         this.player.destroy();
         this.music.stop();
-        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
+        this.time.delayedCall(2000, () => { deathClaw.destroy(); this.scene.start("gameOverScene"); });
     }
 
     playerCollisionSpike() {
@@ -376,10 +404,10 @@ class level02 extends Phaser.Scene {
         this.cameras.main.shake(1500, 0.0025);
         let deathSpike = this.add.sprite(this.player.x, this.player.y, "player_deathSpike").setScale(0.3).setOrigin(0.4);
         deathSpike.anims.play("death-spike");
-        deathSpike.on("animationcomplete",  () => { deathSpike.destroy(); })
+        //deathSpike.on("animationcomplete",  () => { deathSpike.destroy(); })
         this.player.destroy();
         this.music.stop();
-        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
+        this.time.delayedCall(2000, () => { deathSpike.destroy(); this.scene.start("gameOverScene"); });
     }
 
     playerCollisionEnemy() {
@@ -388,10 +416,10 @@ class level02 extends Phaser.Scene {
         this.cameras.main.shake(1500, 0.0025);
         let deathEnemy = this.add.sprite(this.player.x, this.player.y, "player_deathEnemy").setScale(0.3).setOrigin(0.4);
         deathEnemy.anims.play("death-enemy");
-        deathEnemy.on("animationcomplete",  () => { deathEnemy.destroy(); })
+        //deathEnemy.on("animationcomplete",  () => { deathEnemy.destroy(); })
         this.player.destroy();
         this.music.stop();
-        this.time.delayedCall(1000, () => { this.scene.start("gameOverScene"); });
+        this.time.delayedCall(2000, () => { deathEnemy.destroy(); this.scene.start("gameOverScene"); });
     }
 
     playerCollision() {
